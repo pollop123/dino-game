@@ -7,13 +7,16 @@ dinoImg.src = 'dino.png'; // 替換為恐龍圖片
 const obstacleImg = new Image();
 obstacleImg.src = 'obstacle.png'; // 替換為障礙物圖片
 
+const backgroundImg = new Image();
+backgroundImg.src = 'background.png'; // 背景圖片
+
 let dino = {
   x: 50,
   y: 150,
   width: 20,
   height: 20,
   dy: 0,
-  jumpHeight: -7,
+  jumpHeight: -10, // 增加跳躍高度
   gravity: 0.5,
   grounded: false,
   invincible: false,
@@ -53,18 +56,14 @@ function update() {
       dino.y + dino.height > obstacles[i].y
     ) {
       gameOver = true;
-      ctx.fillStyle = "red";
-      ctx.font = "40px Arial";
-      ctx.fillText("Game Over", canvas.width / 2 - 100, canvas.height / 2);
-      ctx.fillText(`Score: ${score}`, canvas.width / 2 - 50, canvas.height / 2 + 50);
+      document.getElementById('gameOver').style.display = 'block';
+      document.getElementById('score').innerHTML = `Score: ${score}`;
       return;
     }
   }
 
   score++;
-  ctx.fillStyle = "black";
-  ctx.font = "20px Arial";
-  ctx.fillText(`Score: ${score}`, 10, 20);
+  document.getElementById('score').innerHTML = `Score: ${score}`;
 
   requestAnimationFrame(update);
 }
