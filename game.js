@@ -78,6 +78,10 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+document.addEventListener("touchstart", function () {
+  jump();
+});
+
 function createObstacle() {
   let obstacle = {
     x: canvas.width,
