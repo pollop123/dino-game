@@ -10,10 +10,10 @@ obstacleImg.src = 'obstacle.png'; // 替換為障礙物圖片
 let dino = {
   x: 50,
   y: 150,
-  width: 400, // 增加寬度
-  height: 400, // 增加高度
+  width: 60, // 增加寬度
+  height: 60, // 增加高度
   dy: 0,
-  jumpHeight: -12, // 增加跳躍高度
+  jumpHeight: -15, // 增加跳躍高度
   gravity: 0.5,
   grounded: false,
   invincible: false,
@@ -85,9 +85,9 @@ document.addEventListener("touchstart", function () {
 function createObstacle() {
   let obstacle = {
     x: canvas.width,
-    y: canvas.height - 40 - Math.random() * 50, // 增加障礙物高度
-    width: 400,
-    height: 400 + Math.random() * 30,
+    y: canvas.height - 60 - Math.random() * 50, // 增加障礙物高度
+    width: 50, // 增加寬度
+    height: 50 + Math.random() * 30, // 增加高度
   };
   obstacles.push(obstacle);
 }
@@ -95,9 +95,9 @@ function createObstacle() {
 function createStar() {
   let star = {
     x: canvas.width,
-    y: canvas.height - 60,
-    width: 20,
-    height: 20,
+    y: canvas.height - 80,
+    width: 30,
+    height: 30,
     type: 'star'
   };
   obstacles.push(star);
