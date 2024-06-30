@@ -3,16 +3,44 @@
 <head>
   <title>恐龍遊戲</title>
   <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #eaeaea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('background.png'); /* 加上背景圖 */
+      background-size: cover;
+    }
+    #gameContainer {
+      text-align: center;
+    }
     canvas {
+      background: white;
+      border: 2px solid black;
       display: block;
-      margin: auto;
-      background-color: #f4f4f4;
-      border: 1px solid #000;
+      margin: 0 auto;
+    }
+    #gameOver {
+      display: none;
+      font-size: 24px;
+      color: red;
+    }
+    #score {
+      font-size: 24px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="200"></canvas>
+  <div id="gameContainer">
+    <h1>恐龍遊戲</h1>
+    <canvas id="gameCanvas" width="800" height="200"></canvas>
+    <div id="gameOver">Game Over</div>
+    <div id="score">Score: 0</div>
+  </div>
   <script src="game.js"></script>
 </body>
 </html>
