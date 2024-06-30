@@ -10,8 +10,8 @@ obstacleImg.src = 'obstacle.png'; // 替換為障礙物圖片
 let dino = {
   x: 50,
   y: 150,
-  width: 40, // 增加寬度
-  height: 40, // 增加高度
+  width: 400, // 增加寬度
+  height: 400, // 增加高度
   dy: 0,
   jumpHeight: -12, // 增加跳躍高度
   gravity: 0.5,
@@ -86,8 +86,8 @@ function createObstacle() {
   let obstacle = {
     x: canvas.width,
     y: canvas.height - 40 - Math.random() * 50, // 增加障礙物高度
-    width: 40,
-    height: 40 + Math.random() * 30,
+    width: 400,
+    height: 400 + Math.random() * 30,
   };
   obstacles.push(obstacle);
 }
