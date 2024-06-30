@@ -10,7 +10,7 @@ obstacleImg.src = 'obstacle.png'; // 替換為障礙物圖片
 let dino = {
   x: 50,
   y: 150,
-  width: 60, // 增加寬度
+  width: 40, // 增加寬度
   height: 60, // 增加高度
   dy: 0,
   jumpHeight: -15, // 增加跳躍高度
