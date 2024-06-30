@@ -7,16 +7,13 @@ dinoImg.src = 'dino.png'; // 替換為恐龍圖片
 const obstacleImg = new Image();
 obstacleImg.src = 'obstacle.png'; // 替換為障礙物圖片
 
-const backgroundImg = new Image();
-backgroundImg.src = 'background.png'; // 背景圖片
-
 let dino = {
   x: 50,
   y: 150,
-  width: 20,
-  height: 20,
+  width: 40, // 增加寬度
+  height: 40, // 增加高度
   dy: 0,
-  jumpHeight: -10, // 增加跳躍高度
+  jumpHeight: -12, // 增加跳躍高度
   gravity: 0.5,
   grounded: false,
   invincible: false,
@@ -84,9 +81,9 @@ document.addEventListener("keydown", function (event) {
 function createObstacle() {
   let obstacle = {
     x: canvas.width,
-    y: canvas.height - 20 - Math.random() * 50,
-    width: 20,
-    height: 20 + Math.random() * 30,
+    y: canvas.height - 40 - Math.random() * 50, // 增加障礙物高度
+    width: 40,
+    height: 40 + Math.random() * 30,
   };
   obstacles.push(obstacle);
 }
@@ -94,7 +91,7 @@ function createObstacle() {
 function createStar() {
   let star = {
     x: canvas.width,
-    y: canvas.height - 40,
+    y: canvas.height - 60,
     width: 20,
     height: 20,
     type: 'star'
@@ -105,6 +102,17 @@ function createStar() {
 function specialMechanism() {
   dino.invincible = true;
   setTimeout(() => dino.invincible = false, 5000);
+}
+
+function restartGame() {
+  dino.y = 150;
+  dino.dy = 0;
+  dino.grounded = false;
+  obstacles = [];
+  score = 0;
+  gameOver = false;
+  document.getElementById('gameOver').style.display = 'none';
+  update();
 }
 
 setInterval(createObstacle, 2000);
