@@ -165,12 +165,7 @@ function update(currentTime) {
     requestAnimationFrame(update);
 }
 
-let playerName = "";
-
 function startGame() {
-    playerName = document.getElementById('playerName').value || "Player";
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('gameContainer').style.display = 'block';
     resetGame();
     requestAnimationFrame(update);
 }
@@ -276,7 +271,7 @@ function restartGame() {
 }
 
 preloadImages().then(() => {
-    document.getElementById('startScreen').style.display = 'block';
+    startGame();
 }).catch(err => {
     console.error("Failed to preload images:", err);
 });
