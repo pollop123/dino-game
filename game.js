@@ -1,24 +1,38 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// 加載圖片
-const dinoImg = new Image();
-dinoImg.src = 'dino.png';
+// 加载图片
+const images = {
+    dino: 'dino.png',
+    obstacle: 'obstacle.png',
+    star: 'star.png',
+    background: 'background.png'
+};
 
-const obstacleImg = new Image();
-obstacleImg.src = 'obstacle.png';
+const loadedImages = {};
 
-const starImg = new Image();
-starImg.src = 'star.png';
+// 预加载所有图片
+function preloadImages() {
+    const promises = Object.entries(images).map(([key, src]) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                loadedImages[key] = img;
+                resolve();
+            };
+            img.onerror = reject;
+            img.src = src + '?v=' + Date.now(); // 添加版本号避免缓存
+        });
+    });
 
-const backgroundImg = new Image();
-backgroundImg.src = 'background.png';
+    return Promise.all(promises);
+}
 
 let dino = {
     x: 50,
-    y: canvas.height - 60,
-    width: 100,
-    height: 100,
+    y: canvas.height - 80,
+    width: 80,
+    height: 80,
     dy: 0,
     jumpHeight: -18,
     gravity: 0.6,
@@ -43,20 +57,20 @@ let starTimer = 0;
 function update(currentTime) {
     if (gameOver) return;
 
-    const deltaTime = currentTime - lastTime;
+    const deltaTime = (currentTime - lastTime) / 16.67; // 将时间差标准化为 60fps
     lastTime = currentTime;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 移動背景
-    backgroundX -= gameSpeed / 2;
+    // 移动背景
+    backgroundX -= gameSpeed / 2 * deltaTime;
     if (backgroundX <= -canvas.width) backgroundX = 0;
-    ctx.drawImage(backgroundImg, backgroundX, 0, canvas.width, canvas.height);
-    ctx.drawImage(backgroundImg, backgroundX + canvas.width, 0, canvas.width, canvas.height);
+    ctx.drawImage(loadedImages.background, backgroundX, 0, canvas.width, canvas.height);
+    ctx.drawImage(loadedImages.background, backgroundX + canvas.width, 0, canvas.width, canvas.height);
 
-    // 更新恐龍位置
-    dino.dy += dino.gravity;
-    dino.y += dino.dy;
+    // 更新恐龙位置
+    dino.dy += dino.gravity * deltaTime;
+    dino.y += dino.dy * deltaTime;
 
     if (dino.y + dino.height >= canvas.height) {
         dino.y = canvas.height - dino.height;
@@ -64,16 +78,16 @@ function update(currentTime) {
         dino.grounded = true;
     }
 
-    ctx.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+    ctx.drawImage(loadedImages.dino, dino.x, dino.y, dino.width, dino.height);
 
-    // 更新障礙物
+    // 更新障碍物
     obstacles = obstacles.filter(obstacle => {
-        obstacle.x -= gameSpeed * (isSprinting ? 1.5 : 1);
+        obstacle.x -= gameSpeed * (isSprinting ? 1.5 : 1) * deltaTime;
 
         if (obstacle.type === 'star') {
-            ctx.drawImage(starImg, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            ctx.drawImage(loadedImages.star, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
         } else {
-            ctx.drawImage(obstacleImg, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            ctx.drawImage(loadedImages.obstacle, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
         }
 
         if (dino.invincible) {
@@ -97,7 +111,7 @@ function update(currentTime) {
                         highScore = score;
                         localStorage.setItem('highScore', highScore);
                     }
-                    document.getElementById('score').innerHTML = `Score: ${score} | High Score: ${highScore}`;
+                    updateScoreDisplay();
                     return false;
                 } else {
                     dino.invincible = true;
@@ -115,37 +129,69 @@ function update(currentTime) {
         return true;
     });
 
-    // 生成新障礙物
+    // 生成新障碍物
     obstacleTimer += deltaTime;
-    if (obstacleTimer > 2000 / (gameSpeed / 5)) {
+    if (obstacleTimer > 120 / (gameSpeed / 5)) {
         createObstacle();
         obstacleTimer = 0;
     }
 
     // 生成新星星
     starTimer += deltaTime;
-    if (starTimer > 10000) {
+    if (starTimer > 600) {
         createStar();
         starTimer = 0;
     }
 
     score++;
-    document.getElementById('score').innerHTML = `Score: ${score} | High Score: ${highScore} | Lives: ${lives}`;
+    updateScoreDisplay();
 
-    // 增加難度
+    // 增加难度
     gameSpeed = 5 + Math.floor(score / 500) * 0.5;
 
-    // 更新能量條
+    // 更新能量条
     if (isSprinting) {
-        energy = Math.max(0, energy - 1);
+        energy = Math.max(0, energy - 1 * deltaTime);
         if (energy === 0) isSprinting = false;
     } else {
-        energy = Math.min(100, energy + 0.2);
+        energy = Math.min(100, energy + 0.2 * deltaTime);
     }
     
     drawEnergyBar();
 
     requestAnimationFrame(update);
+}
+
+let playerName = "";
+
+function startGame() {
+    playerName = document.getElementById('playerName').value || "Player";
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('gameContainer').style.display = 'block';
+    resetGame();
+    requestAnimationFrame(update);
+}
+
+function resetGame() {
+    dino.y = canvas.height - 80;
+    dino.dy = 0;
+    dino.grounded = false;
+    dino.invincible = false;
+    obstacles = [];
+    score = 0;
+    gameSpeed = 5;
+    gameOver = false;
+    obstacleTimer = 0;
+    starTimer = 0;
+    lives = 3;
+    energy = 100;
+    isSprinting = false;
+    lastTime = 0;
+    updateScoreDisplay();
+}
+
+function updateScoreDisplay() {
+    document.getElementById('score').innerHTML = `Score: ${score} | High Score: ${highScore} | Lives: ${lives}`;
 }
 
 function jump() {
@@ -188,8 +234,8 @@ function createObstacle() {
     let obstacle = {
         x: canvas.width,
         y: obstacleType === 'flying' ? canvas.height - 150 - Math.random() * 100 : canvas.height - 50 - Math.random() * 50,
-        width: 100,
-        height: 50 + Math.random() * 30,
+        width: 60,
+        height: 60,
         type: 'obstacle',
         obstacleType: obstacleType
     };
@@ -209,9 +255,9 @@ function createStar() {
 
 function drawEnergyBar() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(10, 10, 200, 20);
+    ctx.fillRect(canvas.width - 210, 10, 200, 20);
     ctx.fillStyle = 'rgba(0, 255, 0, 0.7)';
-    ctx.fillRect(10, 10, energy * 2, 20);
+    ctx.fillRect(canvas.width - 210, 10, energy * 2, 20);
 }
 
 function specialMechanism() {
@@ -220,32 +266,22 @@ function specialMechanism() {
 }
 
 function restartGame() {
-    dino.y = canvas.height - 60;
+    dino.y = canvas.height - 80;
     dino.dy = 0;
-    dino.grounded = false;
+    dino.grounded = true;
     dino.invincible = false;
     obstacles = [];
     score = 0;
     gameSpeed = 5;
     gameOver = false;
-    obstacleTimer = 0;
-    starTimer = 0;
+    backgroundX = 0;
     lives = 3;
-    energy = 100;
-    isSprinting = false;
     document.getElementById('gameOver').style.display = 'none';
     requestAnimationFrame(update);
 }
 
-// 在加載所有圖片後開始遊戲
-Promise.all([
-    new Promise(resolve => dinoImg.onload = resolve),
-    new Promise(resolve => obstacleImg.onload = resolve),
-    new Promise(resolve => starImg.onload = resolve),
-    new Promise(resolve => backgroundImg.onload = resolve)
-]).then(() => {
-    console.log("All images loaded");
-    requestAnimationFrame(update);
-}).catch(error => {
-    console.error("Error loading images:", error);
+preloadImages().then(() => {
+    document.getElementById('startScreen').style.display = 'block';
+}).catch(err => {
+    console.error("Failed to preload images:", err);
 });
