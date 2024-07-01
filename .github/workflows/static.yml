@@ -36,8 +36,14 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          # Upload only the necessary files
+          path: |
+            index.html
+            game.js
+            dino.png
+            obstacle.png
+            star.png
+            background.png
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
