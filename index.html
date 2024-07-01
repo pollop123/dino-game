@@ -1,57 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>恐龍遊戲</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: #eaeaea;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-size: cover;
-    }
-    #gameContainer {
-      text-align: center;
-      width: 100%;
-      max-width: 800px;
-      padding: 10px;
-    }
-    canvas {
-      background: white;
-      border: 2px solid black;
-      display: block;
-      margin: 0 auto;
-      width: 100%;
-      max-width: 800px;
-      height: auto;
-    }
-    #gameOver {
-      display: none;
-      font-size: 24px;
-      color: red;
-    }
-    #score {
-      font-size: 24px;
-      margin-top: 10px;
-    }
-    button {
-      font-size: 18px;
-      margin-top: 10px;
-      padding: 10px 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #gameContainer {
+            display: none;
+            position: relative;
+        }
+        #startScreen {
+            text-align: center;
+        }
+        #startScreen input {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #startScreen button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+        #energyBar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #gameOver button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div id="gameContainer">
-    <h1>恐龍遊戲</h1>
-    <canvas id="gameCanvas" width="1000" height="500"></canvas>
-    <div id="gameOver">Game Over</div>
-    <div id="score">Score: 0 | High Score: 0 | Lives: 3</div>
-    <button onclick="restartGame()">Restart</button>
-  </div>
-  <script src="game.js"></script>
+    <div id="startScreen">
+        <h1>Dino Game</h1>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <br>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        <div id="score"></div>
+        <div id="energyBar"></div>
+        <div id="gameOver">
+            <h1>Game Over</h1>
+            <button onclick="restartGame()">Restart Game</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
 </body>
 </html>
