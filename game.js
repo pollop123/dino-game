@@ -189,7 +189,19 @@ function update(currentTime) {
         dino.jumpCount = 0;
     }
 
+    // 绘制恐龙
     ctx.drawImage(loadedImages.dino, dino.x, dino.y, dino.width, dino.height);
+
+    // 绘制防护罩
+    if (dino.invincible) {
+        ctx.beginPath();
+        ctx.arc(dino.x + dino.width / 2, dino.y + dino.height / 2, dino.width, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';  // 蓝色填充
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 0, 255, 0.8)';  // 蓝色描边
+        ctx.lineWidth = 5;
+        ctx.stroke();
+    }
 
     obstacles = obstacles.filter(obstacle => {
         obstacle.x -= gameSpeed * (isSprinting ? 1.5 : 1) * deltaTime;
@@ -200,10 +212,7 @@ function update(currentTime) {
             ctx.drawImage(loadedImages.obstacle, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
         }
 
-        if (dino.invincible) {
-            ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
-            ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
-        } else if (
+        if (
             dino.x < obstacle.x + obstacle.width &&
             dino.x + dino.width > obstacle.x &&
             dino.y < obstacle.y + obstacle.height &&
@@ -267,6 +276,7 @@ function update(currentTime) {
 
     requestAnimationFrame(update);
 }
+
 
 preloadImages().then(() => {
     document.getElementById('startScreen').style.display = 'block';
