@@ -1,9 +1,6 @@
-name: Deploy to GitHub Pages
+name: Create tar file
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   build:
@@ -13,24 +10,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build project
-      run: npm run build
-
-    - name: Upload to GitHub Pages
+    - name: Create tar file
       run: |
-        tar -czf archive.tgz index.html game.js dino.png obstacle.png star.png background.png
-        mkdir -p public
-        tar -xzf archive.tgz -C public
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+        ls -al # 列出文件，确保文件存在
+        tar -cvf game_assets.tar index.html game.js dino.png obstacle.png star.png background.png
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: game_assets
+        path: game_assets.tar
