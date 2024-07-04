@@ -16,7 +16,21 @@
             overflow: hidden;
         }
         #gameContainer {
+            display: none;
             position: relative;
+        }
+        #startScreen {
+            text-align: center;
+        }
+        #startScreen input {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #startScreen button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
         }
         #score {
             position: absolute;
@@ -52,6 +66,12 @@
     </style>
 </head>
 <body>
+    <div id="startScreen">
+        <h1>Dino Game</h1>
+        <input type="text" id="playerName" placeholder="Enter your name" aria-label="Enter your name">
+        <br>
+        <button onclick="startGame()">Start Game</button>
+    </div>
     <div id="gameContainer">
         <canvas id="gameCanvas" width="800" height="400"></canvas>
         <div id="score"></div>
