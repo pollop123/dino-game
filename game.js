@@ -2,10 +2,10 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const images = {
-    dino: 'dino.png',
-    obstacle: 'obstacle.png',
-    star: 'star.png',
-    background: 'background.png'
+    dino: './dino.png',
+    obstacle: './obstacle.png',
+    star: './star.png',
+    background: './background.png'
 };
 
 const loadedImages = {};
