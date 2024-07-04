@@ -11,7 +11,7 @@ const images = {
 const loadedImages = {};
 const constants = {
     GRAVITY: 0.6,
-    JUMP_HEIGHT: -18,
+    JUMP_HEIGHT: -14,
     INITIAL_GAME_SPEED: 5,
     FRAME_TIME: 16.67
 };
